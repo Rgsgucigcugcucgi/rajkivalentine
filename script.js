@@ -1,15 +1,16 @@
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
+const no = document.getElementById("no");
+const yes = document.getElementById("yes");
 const cat = document.getElementById("cat");
 
-noBtn.addEventListener("mouseover", () => {
-  const x = Math.random() * (window.innerWidth - 100);
-  const y = Math.random() * (window.innerHeight - 100);
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+no.addEventListener("click", () => {
+  const x = Math.random() * 150;
+  const y = Math.random() * 80;
+  no.style.left = x + "px";
+  no.style.top = y + "px";
 });
 
-yesBtn.addEventListener("click", () => {
-  cat.classList.remove("hidden");
-  alert("I love you too ❤️");
+yes.addEventListener("click", () => {
+  cat.classList.remove("hide");
+  alert("Yayyy 😍 Love you too 💖");
 });
+
