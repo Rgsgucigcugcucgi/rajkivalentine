@@ -1,78 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine's Surprise ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Handlee&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        body { text-align: center; font-family: 'Handlee', cursive; background-color: #ffebee; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; touch-action: none; }
-        h1 { font-family: 'Pacifico', cursive; color: #d32f2f; font-size: 2.2rem; padding: 0 20px; }
-        .gif-container img { width: 200px; border-radius: 15px; margin-bottom: 20px; }
-        .buttons { position: relative; width: 100%; height: 200px; display: flex; justify-content: center; align-items: center; }
-        button { padding: 15px 30px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; position: absolute; transition: 0.1s ease-out; }
-        #yesBtn { background-color: #4CAF50; color: white; transform: translateX(-75px); }
-        #noBtn { background-color: #f44336; color: white; transform: translateX(75px); z-index: 100; }
-    </style>
+<meta charset="UTF-8">
+<title>Love Test 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+<audio id="bgm" src="love.mp3" loop></audio>
 
-    <audio id="cupidSong" preload="auto">
-        <source src="https://files.catbox.moe/978xog.mp3" type="audio/mpeg">
-    </audio>
+<div class="app">
+  <img src="envelope.png" class="envelope">
 
-    <div id="main-ui">
-        <div class="gif-container">
-            <img id="displayGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif">
-        </div>
-        <h1 id="text">Will you be my Valentine? ❤️</h1>
-        <div class="buttons">
-            <button id="yesBtn" onclick="celebrate()">Yes</button>
-            <button id="noBtn" onmouseover="moveBtn()" ontouchstart="moveBtn()">No</button>
-        </div>
-    </div>
+  <h1>Do you love me? 💕</h1>
+  <p class="sub">Tap honestly 😌</p>
 
-    <script>
-        const song = document.getElementById('cupidSong');
-        
-        function moveBtn() {
-            const btn = document.getElementById('noBtn');
-            const padding = 50;
-            const maxX = window.innerWidth - btn.offsetWidth - padding;
-            const maxY = window.innerHeight - btn.offsetHeight - padding;
-            
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-            
-            btn.style.position = "fixed";
-            btn.style.left = randomX + 'px';
-            btn.style.top = randomY + 'px';
-            btn.style.transform = 'none'; 
-        }
+  <div class="btn-group">
+    <button id="yes">Yes 😍</button>
+    <button id="no">No 🙈</button>
+  </div>
 
-        function celebrate() {
-            // Gaana 32s se bajega aur mobile support karega
-            song.currentTime = 32;
-            song.play().catch(e => console.log("Audio play error:", e));
+  <img id="cat" src="cat_dance.gif" class="cat hide">
+</div>
 
-            // Confetti Blast
-            var duration = 5 * 1000;
-            var end = Date.now() + duration;
-
-            (function frame() {
-              confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
-              confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
-              if (Date.now() < end) { requestAnimationFrame(frame); }
-            }());
-
-            // UI Changes - Removing all black boxes
-            document.getElementById('displayGif').src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/26BRv0ThflsHCqCkw/giphy.gif";
-            document.getElementById('text').innerHTML = "Yaaay! I Love You! ❤️🥳";
-            document.getElementById('yesBtn').style.display = "none";
-            document.getElementById('noBtn').style.display = "none";
-        }
-    </script>
+<script src="script.js"></script>
 </body>
 </html>
