@@ -4,70 +4,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Be My Valentine? ❤️</title>
+    <title>Valentine's Surprise ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Handlee&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        body { text-align: center; font-family: 'Handlee', cursive; background-color: #ffebee; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        h1 { font-family: 'Pacifico', cursive; color: #d32f2f; font-size: 3rem; margin-bottom: 20px; }
-        .buttons { margin-top: 30px; position: relative; width: 100%; display: flex; justify-content: center; height: 50px; }
-        button { padding: 15px 30px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; font-weight: bold; margin: 0 10px; z-index: 10; }
-        #yesBtn { background-color: #4CAF50; color: white; }
-        #noBtn { background-color: #f44336; color: white; position: absolute; }
-        img { width: 230px; border-radius: 20px; }
-        #youtubeAudio { display: none; } 
+        body { text-align: center; font-family: 'Handlee', cursive; background-color: #ffebee; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; touch-action: none; }
+        h1 { font-family: 'Pacifico', cursive; color: #d32f2f; font-size: 2.2rem; padding: 0 20px; z-index: 1; }
+        .gif-container img { width: 180px; border-radius: 15px; margin-bottom: 10px; }
+        .buttons { position: relative; width: 100vw; height: 300px; display: flex; justify-content: center; align-items: center; }
+        button { padding: 15px 30px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.1s; position: absolute; }
+        #yesBtn { background-color: #4CAF50; color: white; left: 50%; transform: translateX(-110%); }
+        #noBtn { background-color: #f44336; color: white; left: 50%; transform: translateX(10%); transition: all 0.2s ease; }
     </style>
 </head>
 <body>
 
-    <div id="youtubeAudio"></div>
+    <audio id="cupidSong">
+        <source src="https://files.catbox.moe/978xog.mp3" type="audio/mpeg">
+    </audio>
 
-    <div id="content">
-        <img id="mainGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif">
-        <h1 id="question">Will you be my Valentine? ❤️</h1>
-        <div class="buttons" id="btnContainer">
+    <div id="main-ui">
+        <div class="gif-container">
+            <img id="displayGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif">
+        </div>
+        <h1 id="text">Will you be my Valentine? ❤️</h1>
+        <div class="buttons">
             <button id="yesBtn" onclick="celebrate()">Yes</button>
-            <button id="noBtn" onmouseover="moveButton()">No</button>
+            <button id="noBtn" onmouseover="moveBtn()" ontouchstart="moveBtn()" onclick="moveBtn()">No</button>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
-
     <script>
-        let player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtubeAudio', {
-                height: '0',
-                width: '0',
-                videoId: '_M8eHRifbVY', 
-                playerVars: { 'autoplay': 0, 'controls': 0, 'start': 32 }
-            });
-        }
-
-        function moveButton() {
+        const song = document.getElementById('cupidSong');
+        
+        function moveBtn() {
             const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
+            // Screen boundaries with padding
+            const padding = 50;
+            const maxX = window.innerWidth - btn.offsetWidth - padding;
+            const maxY = window.innerHeight - btn.offsetHeight - padding;
+            
+            // Random position generate karna
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            
+            // Button ko move karna
+            btn.style.position = "fixed";
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            btn.style.transform = 'none'; // Initial center hata dega
         }
 
         function celebrate() {
-            if (player) {
-                player.seekTo(32); // 32 seconds par jump karega
-                player.playVideo();
-            }
+            song.currentTime = 32;
+            song.play();
 
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            // Confetti effect
+            var end = Date.now() + (5 * 1000);
+            (function frame() {
+              confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+              confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+              if (Date.now() < end) { requestAnimationFrame(frame); }
+            }());
 
-            document.getElementById('mainGif').src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/26BRv0ThflsHCqCkw/giphy.gif";
-            document.getElementById('question').innerText = "Yaaay! I Love You! ❤️🥳";
-            document.getElementById('btnContainer').style.display = "none";
-            
-            setInterval(() => {
-                confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0 } });
-                confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1 } });
-            }, 2000);
+            document.getElementById('displayGif').src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/26BRv0ThflsHCqCkw/giphy.gif";
+            document.getElementById('text').innerHTML = "Yaaay! I Love You! ❤️🥳";
+            document.getElementById('yesBtn').style.display = "none";
+            document.getElementById('noBtn').style.display = "none";
         }
     </script>
 </body>
