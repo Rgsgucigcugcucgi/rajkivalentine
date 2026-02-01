@@ -2,29 +2,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Love Test 💖</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Handlee&display=swap" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Handlee', cursive;
+            background-color: #ffebee; /* Light pink */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #d32f2f; /* Dark red */
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        .gif-container {
+            margin-bottom: 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .gif-container img {
+            width: 250px;
+            height: auto;
+            display: block;
+        }
+        .buttons {
+            margin-top: 30px;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: center;
+        }
+        button {
+            padding: 18px 35px;
+            font-size: 1.4rem;
+            border: none;
+            border-radius: 50px; /* More rounded */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-family: 'Handlee', cursive;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 0 10px;
+        }
+        #yesBtn {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+        #yesBtn:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        #noBtn {
+            background-color: #f44336; /* Red */
+            color: white;
+            position: absolute; /* Keep it absolute for movement */
+            white-space: nowrap; /* Prevent text wrap */
+        }
+        #noBtn:hover {
+            background-color: #da190b;
+        }
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicks to pass through */
+            z-index: 1000;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f; /* Example color */
+            animation: fall linear forwards;
+            opacity: 0;
+            border-radius: 2px;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotateZ(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
+        }
+        #audioPlayer {
+            display: none; /* Hide the audio player */
+        }
+    </style>
 </head>
-
 <body>
-<audio id="bgm" src="love.mp3" loop></audio>
 
-<div class="app">
-  <img src="envelope.png" class="envelope">
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-  <h1>Do you love me? 💕</h1>
-  <p class="sub">Tap honestly 😌</p>
+    <div class="gif-container">
+        <img id="mainGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute Cat asking">
+    </div>
 
-  <div class="btn-group">
-    <button id="yes">Yes 😍</button>
-    <button id="no">No 🙈</button>
-  </div>
+    <h1>Will you be my Valentine? ❤️</h1>
 
-  <img id="cat" src="cat_dance.gif" class="cat hide">
-</div>
+    <div class="buttons">
+        <button id="yesBtn" onclick="celebrate()">Yes</button>
+        <button id="noBtn" onmouseover="moveButton()">No</button>
+    </div>
 
-<script src="script.js"></script>
+    <div class="confetti-container"></div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const mainGif = document.getElementById('mainGif');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const confettiContainer = document.querySelector('.confetti-container');
+
+        // Play music automatically once page loads (some browsers might need user interaction)
+        window.onload = function() {
+            backgroundMusic.volume = 0.3; // Adjust volume (0 to 1)
+            backgroundMusic.play().catch(e => console.log("Music auto-play failed:", e));
+        };
+
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40); // 40px padding
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40); // 40px padding
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            noBtn.style.position = 'absolute'; // Ensure it stays absolute
+            noBtn.style.transform = 'scale(1.1)'; // Slightly grow on hover
+            setTimeout(() => noBtn.style.transform = 'scale(1)', 200); // Shrink back
+        }
+
+        function createConfetti() {
+            const colors = ['#f0f', '#0ff', '#ff0', '#f00', '#0f0', '#00f'];
+            for (let i = 0; i < 50; i++) { // Generate 50 confetti pieces
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+                confetti.style.animationDuration = Math.random() * 2 + 3 + 's'; // 3-5 seconds fall
+                confetti.style.animationDelay = Math.random() * 0.5 + 's'; // Slight delay for staggered fall
+                confetti.style.width = Math.random() * 8 + 5 + 'px';
+                confetti.style.height = Math.random() * 8 + 5 + 'px';
+                confetti.style.top = -20 + 'px'; // Start above screen
+                confettiContainer.appendChild(confetti);
+                // Remove confetti after animation to prevent DOM clutter
+                confetti.addEventListener('animationend', () => confetti.remove());
+            }
+        }
+
+        function celebrate() {
+            backgroundMusic.pause(); // Stop the background music
+            createConfetti(); // Start confetti
+
+            document.body.style.backgroundColor = '#e0f7fa'; // Lighter blue for celebration
+            document.body.innerHTML = `
+                <div class="confetti-container"></div>
+                <audio id="celebrationMusic" autoplay>
+                    </audio>
+                <h1 style="font-size: 4rem; color: #ff4081;">Yaaay! I Love You! ❤️🥳</h1>
+                <div class="gif-container">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHJreGZueGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4eGZ4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/26BRv0ThflsHCqCkw/giphy.gif" alt="Happy couple celebration">
+                </div>
+                <p style="font-size: 1.5rem; color: #7b1fa2; margin-top: 20px;">
+                    Thank you for making my day! Sending you lots of love!
+                </p>
+            `;
+            // Re-initialize confetti container for the new body content
+            const newConfettiContainer = document.querySelector('.confetti-container');
+            if (newConfettiContainer) {
+                // To make confetti continue if it's already falling, or start new ones
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    const colors = ['#f0f', '#0ff', '#ff0', '#f00', '#0f0', '#00f'];
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.width = Math.random() * 8 + 5 + 'px';
+                    confetti.style.height = Math.random() * 8 + 5 + 'px';
+                    confetti.style.top = -20 + 'px';
+                    newConfettiContainer.appendChild(confetti);
+                    confetti.addEventListener('animationend', () => confetti.remove());
+                }
+            }
+        }
+    </script>
 </body>
 </html>
